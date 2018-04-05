@@ -5,8 +5,8 @@
  * 2 Подключите dbconn.php с объявлением глобальных переменных $DBHost, $DBLogin, $DBPassword, $DBName
  * ! - Если используется нестандартный порт, придётся отделить его в $DBHost и передать отдельно.
  */
-require_once realpath(__DIR__) . '/vendor/autoload.php';
-require_once realpath(__DIR__) . '/bitrix/php_interface/dbconn.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/bitrix/php_interface/dbconn.php';
 
 /**
  * 3 Укажите токен, который при запросе должен быть отправлен в заголовке X-BMonitor-Token

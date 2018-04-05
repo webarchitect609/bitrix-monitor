@@ -27,7 +27,7 @@ class BasketInsertMetric extends MetricBase
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $sql = <<<END
-SELECT count(*) as CNT FROM b_sale_basket WHERE DELAY = '%s' AND DATE_INSERT >= '%' AND ORDER_ID IS NULL
+SELECT count(*) as CNT FROM b_sale_basket WHERE DELAY = '%s' AND DATE_INSERT >= '%s' AND ORDER_ID IS NULL
 END;
 
         return (int)$this->calculateSimpleSqlMetric(

@@ -41,6 +41,15 @@ abstract class MetricBase implements MetricInterface
     protected function calculateSimpleSqlMetric(string $query, string $colName)
     {
         $mysqli_result = $this->getMysqli()->query($query);
+        if (false === $mysqli_result) {
+            throw new RuntimeException(
+                sprintf(
+                    'Error executing query (%s): %s',
+                    $this->getMysqli()->errno,
+                    $this->getMysqli()->error
+                )
+            );
+        }
         $row = $mysqli_result->fetch_assoc();
         $mysqli_result->free();
 
