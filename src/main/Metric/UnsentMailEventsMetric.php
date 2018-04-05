@@ -2,11 +2,10 @@
 
 namespace WebArch\BitrixMonitor\Metric;
 
-use DateTimeImmutable;
 use RuntimeException;
 use WebArch\BitrixMonitor\Metric\Abstraction\MetricBase;
 
-class UserAuthorizeMetric extends MetricBase
+class UnsentMailEventsMetric extends MetricBase
 {
     /**
      * @return int
@@ -17,10 +16,11 @@ class UserAuthorizeMetric extends MetricBase
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $sql = <<<END
-SELECT count(*) as CNT FROM b_user WHERE LAST_LOGIN >= '%s'
+select count(*) as CNT from b_event where SUCCESS_EXEC = 'N' or DATE_EXEC is null
 END;
 
-        return (int)$this->calculateSimpleSqlMetric(sprintf($sql, $this->getIntervalStartDateTime()), 'CNT');
+        return (int)$this->calculateSimpleSqlMetric($sql, 'CNT');
+
     }
 
 }

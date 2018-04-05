@@ -1,6 +1,6 @@
 {
   "name": "webarchitect609/bitrix-monitor",
-  "description": "Bitrix monitoring HTTP-controller.",
+  "description": "Bitrix monitoring via HTTP-request.",
   "type": "library",
   "license": "MIT",
   "authors": [

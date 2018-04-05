@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * 0 Подключите /vendor/autoload.php
+ */
 require_once realpath(__DIR__) . '/vendor/autoload.php';
 require_once realpath(__DIR__) . '/bitrix/php_interface/dbconn.php';
 

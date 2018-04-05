@@ -3,7 +3,9 @@
 namespace WebArch\BitrixMonitor\Metric\Abstraction;
 
 use DateInterval;
+use DateTimeImmutable;
 use mysqli;
+use RuntimeException;
 
 abstract class MetricBase implements MetricInterface
 {
@@ -22,9 +24,49 @@ abstract class MetricBase implements MetricInterface
      */
     private $interval;
 
-    public function __construct(string $name = '')
+    public function __construct(string $name)
     {
         $this->setName($name);
+    }
+
+    /**
+     * Возвращает расчёт простейшей метрики, состоящей из SQL запроса и содержащей результат в одном столбце.
+     *
+     * @param string $query
+     * @param string $colName
+     *
+     * @return mixed
+     * @throws RuntimeException
+     */
+    protected function calculateSimpleSqlMetric(string $query, string $colName)
+    {
+        $mysqli_result = $this->getMysqli()->query($query);
+        $row = $mysqli_result->fetch_assoc();
+        $mysqli_result->free();
+
+        if (!array_key_exists($colName, $row)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Column `%s` not found in query result for metric %s',
+                    $colName,
+                    static::class
+                )
+            );
+        }
+
+        return $row[$colName];
+    }
+
+    /**
+     * Возвращает дату и время начала диапазона, отступив заданный интервал от текущей метки времени
+     *
+     * @param string $format
+     *
+     * @return string
+     */
+    protected function getIntervalStartDateTime($format = DATE_ISO8601): string
+    {
+        return (new DateTimeImmutable())->sub($this->getInterval())->format($format);
     }
 
     /**
