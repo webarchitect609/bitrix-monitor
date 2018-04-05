@@ -1,49 +1,36 @@
 <?php
 
 /**
- * 0 Подключите /vendor/autoload.php
+ * 1 Подключите /vendor/autoload.php
+ * 2 Подключите dbconn.php с объявлением глобальных переменных $DBHost, $DBLogin, $DBPassword, $DBName
+ * ! - Если используется нестандартный порт, придётся отделить его в $DBHost и передать отдельно.
  */
 require_once realpath(__DIR__) . '/vendor/autoload.php';
 require_once realpath(__DIR__) . '/bitrix/php_interface/dbconn.php';
 
 /**
- * 1 Укажите токен, который при запросе должен быть отправлен в заголовке X-BMonitor-Token
+ * 3 Укажите токен, который при запросе должен быть отправлен в заголовке X-BMonitor-Token
  */
 $monitor = \WebArch\BitrixMonitor\Monitor::create('very-long-token-to-be-placed-here!');
 
 /**
- * 2 Укажите интервал, за который должны быть подсчитаны метрики.
+ * 4 Укажите интервал, за который должны быть подсчитаны метрики.
  */
 $monitor->setInterval(new DateInterval('PT1M'));
 
 /**
- * 3 Укажите какие метрики и с какими именами должны быть добавлены в монитор.
+ * 5 Укажите какие метрики и с какими именами будут доступны.
  */
-$monitor->addMetric(new \WebArch\BitrixMonitor\Metric\UserAuthorizeMetric('userauth'));
-
-try {
-    /**
-     * 4 Укажите, в каком параметре запроса будет приходить имя запрашиваемой метрики.
-     */
-    echo $monitor->evalMetricByName(trim($_REQUEST['metric']));
-
-} catch (Exception $exception) {
-
-    /**
-     * Т.к. был проверен token,
-     * то это сообщение увидит только сторона,
-     * обладающая доступом к мониторингу.
-     */
-    echo sprintf(
-        "[%s] %s (%s)\n%s\n",
-        get_class($exception),
-        $exception->getMessage(),
-        $exception->getCode(),
-        $exception->getTraceAsString()
-    );
-}
+$monitor->addMetric(new \WebArch\BitrixMonitor\Metric\UserAuthorizeMetric('userauth'))
+        ->addMetric(new \WebArch\BitrixMonitor\Metric\BasketInsertMetric('basket'))
+        ->addMetric(new \WebArch\BitrixMonitor\Metric\UnsentMailEventsMetric('mail'));
 
 /**
- * 5 Настройте Zabbix или аналогичное ПО на отправку HTTP запроса с токеном и именем метрики.
+ * 6 Укажите, в каком параметре запроса будет приходить имя запрашиваемой метрики.
+ */
+echo $monitor->exec(trim($_REQUEST['metric']));
+
+/**
+ * 7 Настройте Zabbix или аналогичное ПО на отправку HTTP запроса с токеном и именем метрики.
  * В теле ответа будет только значение метрики.
  */

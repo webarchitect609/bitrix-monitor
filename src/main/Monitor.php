@@ -3,6 +3,7 @@
 namespace WebArch\BitrixMonitor;
 
 use DateInterval;
+use Exception;
 use mysqli;
 use RuntimeException;
 use WebArch\BitrixMonitor\Metric\Abstraction\MetricInterface;
@@ -57,10 +58,39 @@ class Monitor
         );
     }
 
+    /**
+     * @param string $metricName
+     *
+     * @return string
+     */
+    public function exec(string $metricName): string
+    {
+        try {
+
+            return $this->evalMetricByName($metricName);
+
+        } catch (Exception $exception) {
+
+            header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
+            /**
+             * Т.к. был проверен token,
+             * то это сообщение увидит только сторона,
+             * обладающая доступом к мониторингу.
+             */
+            return sprintf(
+                "[%s] %s (%s)\n%s\n",
+                get_class($exception),
+                $exception->getMessage(),
+                $exception->getCode(),
+                $exception->getTraceAsString()
+            );
+        }
+    }
+
     protected function checkToken(string $token)
     {
         if ($_SERVER[self::TOKEN_HEADER_KEY] !== $token) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden', true, 403);
+            header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401);
             exit();
         }
     }
