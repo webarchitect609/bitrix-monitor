@@ -6,11 +6,13 @@
   "authors": [
     {
       "name": "Sergey Gripinskiy",
-      "email": "web-architect@mail.ru"
+      "email": "web-architect@mail.ru",
+      "role": "Creator"
     }
   ],
   "require": {
-    "php": "^7.0"
+    "php": "^7.2",
+    "ext-mysqli": "*"
   },
   "autoload": {
     "psr-4": {

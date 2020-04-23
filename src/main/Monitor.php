@@ -6,6 +6,7 @@ use DateInterval;
 use Exception;
 use mysqli;
 use RuntimeException;
+use WebArch\BitrixMonitor\Enum\ErrorCode;
 use WebArch\BitrixMonitor\Metric\Abstraction\MetricInterface;
 
 class Monitor
@@ -72,16 +73,19 @@ class Monitor
         } catch (Exception $exception) {
 
             header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
+
             /**
              * Т.к. был проверен token,
              * то это сообщение увидит только сторона,
              * обладающая доступом к мониторингу.
              */
             return sprintf(
-                "[%s] %s (%s)\n%s\n",
+                "[%s] %s (%s) in %s:%s\n%s\n",
                 get_class($exception),
                 $exception->getMessage(),
                 $exception->getCode(),
+                $exception->getFile(),
+                $exception->getLine(),
                 $exception->getTraceAsString()
             );
         }
@@ -89,9 +93,15 @@ class Monitor
 
     protected function checkToken(string $token)
     {
+        $token = trim($token);
+        if ('' === $token) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+            exit(ErrorCode::TOKEN_IS_NOT_CONFIGURED);
+        }
+
         if ($_SERVER[self::TOKEN_HEADER_KEY] !== $token) {
             header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401);
-            exit();
+            exit(ErrorCode::TOKEN_IS_NOT_VALID);
         }
     }
 
@@ -150,8 +160,8 @@ class Monitor
     /**
      * @param string $name
      *
-     * @return mixed
      * @throws RuntimeException
+     * @return mixed
      */
     public function evalMetricByName(string $name)
     {
