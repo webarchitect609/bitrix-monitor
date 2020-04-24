@@ -2,25 +2,32 @@
 
 namespace WebArch\BitrixMonitor\Metric;
 
-use DateTimeImmutable;
-use RuntimeException;
-use WebArch\BitrixMonitor\Metric\Abstraction\MetricBase;
+use DateInterval;
+use DateTimeZone;
+use Exception;
+use WebArch\Monitor\Metric\MySQLiAwareMetricBase;
 
-class UserAuthorizeMetric extends MetricBase
+class UserAuthorizeMetric extends MySQLiAwareMetricBase
 {
     /**
-     * @return int
-     * @throws RuntimeException
+     * @inheritDoc
+     * @throws Exception
      */
-    public function calculate()
+    public function calculate(DateInterval $interval, DateTimeZone $timeZone = null)
     {
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $sql = <<<END
-SELECT count(*) as CNT FROM b_user WHERE LAST_LOGIN >= '%s'
+select count(*) as CNT from b_user where LAST_LOGIN >= '%s'
 END;
 
-        return (int)$this->calculateSimpleSqlMetric(sprintf($sql, $this->getIntervalStartDateTime()), 'CNT');
+        return (int)$this->calculateSimpleSqlMetric(
+            sprintf(
+                $sql,
+                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ISO8601)
+            ),
+            'CNT'
+        );
     }
 
 }

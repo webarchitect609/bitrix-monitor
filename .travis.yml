@@ -1,0 +1,21 @@
+---
+language: php
+dist: bionic
+services: mysql
+sudo: false
+
+php:
+  - 7.2
+  - 7.3
+  - 7.4
+
+before_install:
+  - mysql -u root < ./src/test/resources/mysql_dump.sql
+  - mysql -u root -e "grant all privileges on \`bitrix\`.* to 'travis'@'%'"
+
+before_script:
+  - (composer self-update; true)
+  - composer install
+
+script:
+  - composer test

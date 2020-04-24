@@ -2,10 +2,12 @@
 
 namespace WebArch\BitrixMonitor\Metric;
 
-use RuntimeException;
-use WebArch\BitrixMonitor\Metric\Abstraction\MetricBase;
+use DateInterval;
+use DateTimeZone;
+use Exception;
+use WebArch\Monitor\Metric\MySQLiAwareMetricBase;
 
-class OrderInStatusMetric extends MetricBase
+class OrderInStatusMetric extends MySQLiAwareMetricBase
 {
     /**
      * @var string
@@ -19,24 +21,25 @@ class OrderInStatusMetric extends MetricBase
     }
 
     /**
-     * @return int
-     * @throws RuntimeException
+     * @inheritDoc
+     * @throws Exception
      */
-    public function calculate()
+    public function calculate(DateInterval $interval, DateTimeZone $timeZone = null)
     {
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $sql = <<<END
-SELECT count(*) as CNT FROM b_sale_order WHERE STATUS_ID = '%s' AND DATE_STATUS >= '%s'
+select count(*) as CNT from b_sale_order where STATUS_ID = '%s' and DATE_STATUS >= '%s'
 END;
 
         return (int)$this->calculateSimpleSqlMetric(
             sprintf(
                 $sql,
                 $this->orderStatusId,
-                $this->getIntervalStartDateTime()
+                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ISO8601)
             ),
             'CNT'
         );
     }
+
 }

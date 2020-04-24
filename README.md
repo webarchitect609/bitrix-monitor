@@ -1,7 +1,12 @@
-Мониторинг Битрикс через HTTP-запросы. 
+Битрикс монитор
+===============
+
+[![Build Status](https://travis-ci.org/webarchitect609/bitrix-monitor.svg?branch=master)](https://travis-ci.org/webarchitect609/bitrix-monitor)
+
+Мониторинг Битрикс через HTTP-запросы.
 
 Пакет предоставляет функционал для мониторинга различных показателей сайта под управлением Битрикс. Запрос авторизуется 
-по наличию токена в HTTP-заголовке X-BMonitor-Token. 
+по наличию токена в HTTP-заголовке X-Monitor-Token. 
 
 Примеры метрик:
 
@@ -25,11 +30,9 @@
 
 ```
 curl -XGET 'http://example.org/bitrix-monitor.php?metric=userauth' \
-    -H 'X-BMonitor-Token: very-long-token-to-be-placed-here!'
+    -H 'X-Monitor-Token: very-long-token-to-be-placed-here!'
 ```
 
 4 Настройте ПО для мониторинга (например, Zabbix) на отправку запроса с токеном и названием запрашиваемой метрики. 
 
 И наслаждайтесь красивыми графиками мониторинга! 
-
-

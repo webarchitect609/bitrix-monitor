@@ -2,16 +2,16 @@
 
 namespace WebArch\BitrixMonitor\Metric;
 
-use RuntimeException;
-use WebArch\BitrixMonitor\Metric\Abstraction\MetricBase;
+use DateInterval;
+use DateTimeZone;
+use WebArch\Monitor\Metric\MySQLiAwareMetricBase;
 
-class UnsentMailEventsMetric extends MetricBase
+class UnsentMailEventsMetric extends MySQLiAwareMetricBase
 {
     /**
-     * @return int
-     * @throws RuntimeException
+     * @inheritDoc
      */
-    public function calculate()
+    public function calculate(DateInterval $interval, DateTimeZone $timeZone = null)
     {
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
@@ -20,7 +20,6 @@ select count(*) as CNT from b_event where SUCCESS_EXEC = 'N' or DATE_EXEC is nul
 END;
 
         return (int)$this->calculateSimpleSqlMetric($sql, 'CNT');
-
     }
 
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         verbose="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuites>
+        <testsuite name="All Test Suite">
+            <directory>src/test</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/main</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="junit" target="build/report.junit.xml"/>
+        <log type="coverage-html" target="build/coverage"/>
+        <log type="coverage-text" target="build/coverage.txt"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+    <php>
+        <env name="DB_HOST" value="127.0.0.1"/>
+        <env name="DB_USERNAME" value="travis"/>
+        <env name="DB_PASSWORD" value=""/>
+        <env name="DB_NAME" value="bitrix"/>
+        <env name="DB_PORT" value="3306"/>
+        <server name="HTTP_X_MONITOR_TOKEN" value="very-long-token-to-be-placed-here"/>
+        <server name="SERVER_PROTOCOL" value="HTTP/1.1"/>
+    </php>
+</phpunit>

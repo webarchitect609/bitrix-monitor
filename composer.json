@@ -12,11 +12,27 @@
   ],
   "require": {
     "php": "^7.2",
-    "ext-mysqli": "*"
+    "webarchitect609/monitor": "^0.1"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "phpunit/phpunit": "^8.5"
   },
   "autoload": {
     "psr-4": {
       "WebArch\\BitrixMonitor\\": "src/main"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WebArch\\BitrixMonitor\\Test\\": "src/test"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config": {
+    "sort-packages": true
   }
 }

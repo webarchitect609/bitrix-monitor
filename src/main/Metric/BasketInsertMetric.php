@@ -2,10 +2,12 @@
 
 namespace WebArch\BitrixMonitor\Metric;
 
-use RuntimeException;
-use WebArch\BitrixMonitor\Metric\Abstraction\MetricBase;
+use DateInterval;
+use DateTimeZone;
+use Exception;
+use WebArch\Monitor\Metric\MySQLiAwareMetricBase;
 
-class BasketInsertMetric extends MetricBase
+class BasketInsertMetric extends MySQLiAwareMetricBase
 {
     /**
      * @var bool
@@ -19,25 +21,25 @@ class BasketInsertMetric extends MetricBase
     }
 
     /**
-     * @return int
-     * @throws RuntimeException
+     * @inheritDoc
+     * @throws Exception
      */
-    public function calculate()
+    public function calculate(DateInterval $interval, DateTimeZone $timeZone = null)
     {
         /** @noinspection SqlDialectInspection */
         /** @noinspection SqlNoDataSourceInspection */
         $sql = <<<END
-SELECT count(*) as CNT FROM b_sale_basket WHERE DELAY = '%s' AND DATE_INSERT >= '%s' AND ORDER_ID IS NULL
+select count(*) as CNT from b_sale_basket where DELAY = '%s' and DATE_INSERT >= '%s' and ORDER_ID is null
 END;
 
         return (int)$this->calculateSimpleSqlMetric(
             sprintf(
                 $sql,
                 $this->toFavorite ? 'Y' : 'N',
-                $this->getIntervalStartDateTime()
+                $this->getIntervalStartDateTime($interval, $timeZone)
+                     ->format(DATE_ISO8601)
             ),
             'CNT'
         );
     }
-
 }
