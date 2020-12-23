@@ -4,6 +4,10 @@ dist: bionic
 services: mysql
 sudo: false
 
+env:
+  global:
+    - XDEBUG_MODE=coverage
+
 php:
   - 7.2
   - 7.3
