@@ -11,12 +11,13 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.2 || ^8.0",
     "webarchitect609/monitor": "^0.1"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.16",
-    "phpunit/phpunit": "^8.5"
+    "phpunit/phpunit": "^9.6",
+    "roave/security-advisories": "dev-latest"
   },
   "autoload": {
     "psr-4": {

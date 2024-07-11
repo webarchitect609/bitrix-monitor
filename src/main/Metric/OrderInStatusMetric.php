@@ -36,7 +36,7 @@ END;
             sprintf(
                 $sql,
                 $this->orderStatusId,
-                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ISO8601)
+                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ATOM)
             ),
             'CNT'
         );

@@ -37,7 +37,7 @@ END;
                 $sql,
                 $this->toFavorite ? 'Y' : 'N',
                 $this->getIntervalStartDateTime($interval, $timeZone)
-                     ->format(DATE_ISO8601)
+                     ->format(DATE_ATOM)
             ),
             'CNT'
         );

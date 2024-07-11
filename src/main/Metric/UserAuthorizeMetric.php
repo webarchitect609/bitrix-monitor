@@ -24,7 +24,7 @@ END;
         return (int)$this->calculateSimpleSqlMetric(
             sprintf(
                 $sql,
-                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ISO8601)
+                $this->getIntervalStartDateTime($interval, $timeZone)->format(DATE_ATOM)
             ),
             'CNT'
         );
